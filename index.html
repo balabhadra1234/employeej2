@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Time Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input, select, button {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #e83e8c);
+        }
+        
+        .btn-test {
+            background: linear-gradient(45deg, #ffc107, #ff8c00);
+        }
+        
+        .btn-edit {
+            background: linear-gradient(45deg, #ffc107, #ff8c00);
+            padding: 5px 10px;
+            font-size: 11px;
+        }
+        
+        .filter-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+        
+        .data-table {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 800px;
+        }
+        
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+        
+        tr:hover {
+            background-color: #f8f9ff;
+        }
+        
+        .action-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+        
+        .action-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+        }
+        
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .gender-male { color: #007bff; font-weight: 600; }
+        .gender-female { color: #e83e8c; font-weight: 600; }
+        
+        .salary-amount {
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .status-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .filter-status {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .export-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .employee-autocomplete {
+            position: relative;
+        }
+        
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+        }
+        
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .create-employee-btn {
+            background: linear-gradient(45deg, #6f42c1, #20c997);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .create-employee-btn:hover {
+            background: linear-gradient(45deg, #5a32a3, #1ba27d);
+            transform: scale(1.05);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="loginSection" class="login-container">
+        <div class="login-header">
+            <h2>🔐 Employee Time Tracker</h2>
+            <p>Please login to access the system</p>
+        </div>
+        <div class="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn" onclick="login()">Login</button>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary" onclick="createAccount()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Employee Modal -->
+    <div id="createEmployeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreateEmployeeModal()">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #333;">➕ Create New Employee</h2>
+            <div class="form-group">
+                <label for="newEmployeeName">Employee Name *</label>
+                <input type="text" id="newEmployeeName" required placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+                <label for="newEmployeeGender">Gender *</label>
+                <select id="newEmployeeGender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button type="button" class="btn" onclick="saveNewEmployee()">Create Employee</button>
+                <button type="button" class="btn btn-danger" onclick="closeCreateEmployeeModal()" style="margin-left: 10px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Initially Hidden) -->
+    <div id="mainApp" class="container hidden">
+        <div class="header">
+            <h1>👥 Employee Time Tracker</h1>
+            <p>Track employee details with entry/exit times and salary information</p>
+            <div style="margin-top: 10px; font-size: 14px; color: rgba(255,255,255,0.8);">
+                Logged in as: <span id="currentUsername" style="font-weight: bold;"></span>
+                <button onclick="logout()" style="margin-left: 15px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
+            </div>
+        </div>
+        
+        <!-- Entry Form -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;">➕ Add Employee Entry</h2>
+            <div id="statusMessage" class="status-message"></div>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="employeeName">👤 Employee Name *</label>
+                    <div class="employee-autocomplete">
+                        <input type="text" id="employeeName" required placeholder="Enter or select employee name">
+                        <div id="employeeAutocompleteList" class="autocomplete-items"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gender">⚧ Gender *</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="entryTime">🕘 Entry Time *</label>
+                    <input type="datetime-local" id="entryTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="exitTime">🕔 Exit Time *</label>
+                    <input type="datetime-local" id="exitTime" required>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn" onclick="addEmployee()">Add Employee Entry</button>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-test" onclick="addTestEntry()">Add Test Entry</button>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-danger" onclick="clearForm()">Clear Form</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;">🔍 Filter Records</h2>
+            <div id="filterStatus" class="filter-status"></div>
+            
+            <!-- Salary Calculator -->
+            <div id="salaryCalculator" class="card" style="display: none; background: rgba(40, 167, 69, 0.1); border: 2px solid #28a745; margin-bottom: 20px;">
+                <h3 style="color: #28a745; margin-bottom: 15px;">💰 Salary Calculator</h3>
+                <div class="form-section" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label for="hourlyRate">💵 Hourly Rate *</label>
+                        <input type="number" id="hourlyRate" placeholder="Enter hourly rate" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="button" class="btn btn-secondary" onclick="calculateSalary()">Calculate Total Salary</button>
+                    </div>
+                </div>
+                <div id="salaryResult" style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; display: none;">
+                    <h4 style="color: #28a745;">📊 Salary Calculation Result</h4>
+                    <div id="salaryDetails"></div>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="filterEmployee">Select Employee</label>
+                    <select id="filterEmployee" onchange="handleEmployeeFilter()">
+                        <option value="">All Employees</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterGender">Filter by Gender</label>
+                    <select id="filterGender">
+                        <option value="">All Genders</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fromDate">From Date</label>
+                    <input type="date" id="fromDate">
+                </div>
+                <div class="form-group">
+                    <label for="toDate">To Date</label>
+                    <input type="date" id="toDate">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary" onclick="filterRecords()">Apply Filter</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger" onclick="clearFilters()">Clear Filters</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn export-btn" onclick="exportToExcel()">📊 Export Excel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats" id="statsSection">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRecords">0</div>
+                <div class="stat-label">Total Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalEmployees">0</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="maleCount">0</div>
+                <div class="stat-label">Male Employees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="femaleCount">0</div>
+                <div class="stat-label">Female Employees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalHours">0</div>
+                <div class="stat-label">Total Hours</div>
+            </div>
+            <div class="stat-card salary-stat">
+                <div class="stat-number" id="totalSalary">₹0</div>
+                <div class="stat-label">Total Salary</div>
+            </div>
+        </div>
+        
+        <!-- Data Table -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;">📊 Employee Time Records</h2>
+            <div class="data-table">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Gender</th>
+                            <th>Date</th>
+                            <th>Entry Time</th>
+                            <th>Exit Time</th>
+                            <th>Total Hours</th>
+                            <th class="salary-column">Calculated Salary</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let employeeData = [];
+        let filteredData = [];
+        let isFiltered = false;
+        let currentHourlyRate = 0;
+        let users = [
+            { username: 'admin', password: 'admin123', role: 'admin' }
+        ];
+        let currentUser = null;
+        let allEmployees = []; // Store all employee names and genders
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we have a saved user
+            const savedUser = localStorage.getItem('ettr_currentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    showMainApp();
+                } catch (e) {
+                    console.log('No valid user data found');
+                }
+            }
+            
+            // Load employees from localStorage
+            const savedEmployees = localStorage.getItem('ettr_employees');
+            if (savedEmployees) {
+                allEmployees = JSON.parse(savedEmployees);
+            }
+            
+            // Add event listener for clicking outside the autocomplete
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.employee-autocomplete')) {
+                    closeAllAutocomplete();
+                }
+            });
+        });
+
+        // Show main application
+        function showMainApp() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUsername').textContent = currentUser.username;
+            loadData();
+            updateEmployeeDropdown();
+            updateStats();
+            initializeEmployeeAutocomplete();
+        }
+
+        // Show login section
+        function showLogin() {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            currentUser = null;
+            localStorage.removeItem('ettr_currentUser');
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showStatus('Please enter both username and password!', true);
+                return;
+            }
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('ettr_currentUser', JSON.stringify(user));
+                showMainApp();
+                showStatus(`Welcome back, ${username}!`);
+            } else {
+                showStatus('Invalid username or password!', true);
+            }
+        }
+
+        // Create account
+        function createAccount() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showStatus('Please enter both username and password!', true);
+                return;
+            }
+            
+            if (password.length < 6) {
+                showStatus('Password must be at least 6 characters long!', true);
+                return;
+            }
+            
+            const existingUser = users.find(u => u.username === username);
+            if (existingUser) {
+                showStatus('Username already exists!', true);
+                return;
+            }
+            
+            const newUser = { username, password, role: 'user' };
+            users.push(newUser);
+            showStatus('Account created successfully! Please login.');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                showLogin();
+                showStatus('Logged out successfully!');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${isError ? 'status-error' : 'status-success'}`;
+            statusDiv.style.display = 'block';
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Round time to nearest 30 minutes
+        function roundToNearest30Minutes(dateTimeString) {
+            const date = new Date(dateTimeString);
+            const minutes = date.getMinutes();
+            const roundedMinutes = Math.round(minutes / 30) * 30;
+            date.setMinutes(roundedMinutes);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            if (roundedMinutes === 60) {
+                date.setMinutes(0);
+                date.setHours(date.getHours() + 1);
+            }
+            return date.toISOString().slice(0, 16);
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN');
+        }
+
+        // Format time helper
+        function formatTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Initialize employee autocomplete
+        function initializeEmployeeAutocomplete() {
+            const input = document.getElementById('employeeName');
+            
+            input.addEventListener('input', function() {
+                const val = this.value;
+                closeAllAutocomplete();
+                
+                if (!val) return;
+                
+                const autocompleteList = document.getElementById('employeeAutocompleteList');
+                const suggestions = allEmployees.filter(emp => 
+                    emp.name.toLowerCase().includes(val.toLowerCase())
+                );
+                
+                if (suggestions.length > 0) {
+                    suggestions.forEach(suggestion => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `<strong>${suggestion.name}</strong> (${suggestion.gender})`;
+                        div.addEventListener('click', function() {
+                            input.value = suggestion.name;
+                            document.getElementById('gender').value = suggestion.gender;
+                            closeAllAutocomplete();
+                        });
+                        autocompleteList.appendChild(div);
+                    });
+                    autocompleteList.style.display = 'block';
+                }
+            });
+        }
+
+        // Close all autocomplete lists
+        function closeAllAutocomplete() {
+            const autocompleteList = document.getElementById('employeeAutocompleteList');
+            autocompleteList.style.display = 'none';
+            autocompleteList.innerHTML = '';
+        }
+
+        // Open create employee modal
+        function openCreateEmployeeModal() {
+            document.getElementById('createEmployeeModal').style.display = 'block';
+            document.getElementById('newEmployeeName').value = '';
+            document.getElementById('newEmployeeGender').value = '';
+        }
+
+        // Close create employee modal
+        function closeCreateEmployeeModal() {
+            document.getElementById('createEmployeeModal').style.display = 'none';
+        }
+
+        // Save new employee
+        function saveNewEmployee() {
+            const name = document.getElementById('newEmployeeName').value.trim();
+            const gender = document.getElementById('newEmployeeGender').value;
+            
+            if (!name) {
+                showStatus('Please enter employee name!', true);
+                return;
+            }
+            if (!gender) {
+                showStatus('Please select gender!', true);
+                return;
+            }
+            
+            // Check if employee already exists
+            const existing = allEmployees.find(emp => emp.name.toLowerCase() === name.toLowerCase());
+            if (existing) {
+                showStatus('Employee with this name already exists!', true);
+                return;
+            }
+            
+            // Add new employee
+            allEmployees.push({ name, gender });
+            localStorage.setItem('ettr_employees', JSON.stringify(allEmployees));
+            
+            closeCreateEmployeeModal();
+            showStatus(`Employee "${name}" created successfully!`);
+            
+            // Update the autocomplete and gender field
+            initializeEmployeeAutocomplete();
+            document.getElementById('employeeName').value = name;
+            document.getElementById('gender').value = gender;
+        }
+
+        // Main function to add employee
+        function addEmployee() {
+            if (!currentUser) {
+                showStatus('Please login to add employee records!', true);
+                return;
+            }
+            
+            const name = document.getElementById('employeeName').value.trim();
+            const gender = document.getElementById('gender').value;
+            const entryTime = document.getElementById('entryTime').value;
+            const exitTime = document.getElementById('exitTime').value;
+            
+            if (!name) {
+                showStatus('Please enter employee name!', true);
+                return;
+            }
+            if (!gender) {
+                showStatus('Please select gender!', true);
+                return;
+            }
+            if (!entryTime) {
+                showStatus('Please select entry time!', true);
+                return;
+            }
+            if (!exitTime) {
+                showStatus('Please select exit time!', true);
+                return;
+            }
+            
+            const roundedEntryTime = roundToNearest30Minutes(entryTime);
+            const roundedExitTime = roundToNearest30Minutes(exitTime);
+            
+            if (new Date(roundedExitTime) <= new Date(roundedEntryTime)) {
+                showStatus('Exit time must be after entry time!', true);
+                return;
+            }
+            
+            // Check if this employee exists in our employee list
+            const existingEmployee = allEmployees.find(emp => emp.name.toLowerCase() === name.toLowerCase());
+            if (!existingEmployee) {
+                // Ask if user wants to create the employee
+                if (confirm(`Employee "${name}" not found. Would you like to create this employee?`)) {
+                    openCreateEmployeeModal();
+                    document.getElementById('newEmployeeName').value = name;
+                    return;
+                }
+                return;
+            }
+            
+            const newEntry = {
+                id: Date.now() + Math.random(),
+                employeeName: name,
+                gender: gender,
+                entryTime: roundedEntryTime,
+                exitTime: roundedExitTime,
+                date: roundedEntryTime.split('T')[0],
+                salary: 0,
+                addedBy: currentUser.username,
+                addedDate: new Date().toISOString()
+            };
+            
+            employeeData.push(newEntry);
+            
+            clearForm();
+            updateEmployeeDropdown();
+            loadData();
+            updateStats();
+            showStatus(`Employee "${name}" added successfully!`);
+        }
+
+        // Add test entry
+        function addTestEntry() {
+            if (!currentUser) {
+                showStatus('Please login to add test entries!', true);
+                return;
+            }
+            
+            const now = new Date();
+            const entryTime = new Date(now.getTime() - 8 * 60 * 60 * 1000);
+            document.getElementById('employeeName').value = 'Test Employee ' + Date.now().toString().slice(-4);
+            document.getElementById('gender').value = Math.random() > 0.5 ? 'male' : 'female';
+            document.getElementById('entryTime').value = entryTime.toISOString().slice(0, 16);
+            document.getElementById('exitTime').value = now.toISOString().slice(0, 16);
+            showStatus('Test data filled in form. Click "Add Employee Entry" to save it.');
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('employeeName').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('entryTime').value = '';
+            document.getElementById('exitTime').value = '';
+            closeAllAutocomplete();
+        }
+
+        // Load and display data
+        function loadData() {
+            filteredData = [...employeeData];
+            isFiltered = false;
+            displayData();
+            updateFilterStatus();
+        }
+
+        // Update filter status
+        function updateFilterStatus() {
+            const filterStatusDiv = document.getElementById('filterStatus');
+            const salaryStats = document.querySelector('.salary-stat');
+            
+            if (isFiltered) {
+                filterStatusDiv.innerHTML = '📊 <strong>Filtered View Active:</strong> Use the salary calculator below to compute hourly-based salaries.';
+                filterStatusDiv.style.display = 'block';
+                filterStatusDiv.style.background = 'rgba(23, 162, 184, 0.1)';
+                filterStatusDiv.style.borderColor = '#17a2b8';
+                filterStatusDiv.style.color = '#0c5460';
+                if (salaryStats) salaryStats.style.display = 'none';
+            } else {
+                filterStatusDiv.innerHTML = '✅ <strong>All Records View:</strong> Showing all employee time records. Filter by employee name to access salary calculation.';
+                filterStatusDiv.style.display = 'block';
+                filterStatusDiv.style.background = 'rgba(40, 167, 69, 0.1)';
+                filterStatusDiv.style.borderColor = '#28a745';
+                filterStatusDiv.style.color = '#155724';
+                if (salaryStats) salaryStats.style.display = 'block';
+            }
+        }
+
+        // Display data in table
+        function displayData() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                const colSpan = 8;
+                tableBody.innerHTML = `<tr><td colspan="${colSpan}" class="no-data">No records found</td></tr>`;
+                return;
+            }
+            
+            filteredData.forEach(entry => {
+                const row = document.createElement('tr');
+                const entryDateTime = new Date(entry.entryTime);
+                const exitDateTime = new Date(entry.exitTime);
+                const diffInMs = exitDateTime - entryDateTime;
+                const totalHours = (diffInMs / (1000 * 60 * 60)).toFixed(2);
+                
+                const genderClass = entry.gender === 'male' ? 'gender-male' : 'gender-female';
+                const genderIcon = entry.gender === 'male' ? '👨' : '👩';
+                
+                const salaryDisplay = (entry.salary && entry.salary > 0) ? 
+                    `<span class="salary-amount">₹${entry.salary.toFixed(2)}</span>` : 
+                    '<span style="color: #666;">Not calculated</span>';
+                
+                row.innerHTML = `
+                    <td><strong>${entry.employeeName}</strong></td>
+                    <td><span class="${genderClass}">${genderIcon} ${entry.gender.toUpperCase()}</span></td>
+                    <td>${formatDate(entry.date)}</td>
+                    <td><strong>${formatTime(entry.entryTime)}</strong></td>
+                    <td><strong>${formatTime(entry.exitTime)}</strong></td>
+                    <td><strong>${totalHours} hrs</strong></td>
+                    <td class="salary-column">${salaryDisplay}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editEntry(${entry.id})">✏️ Edit</button>
+                        <button class="action-btn" onclick="deleteEntry(${entry.id})">🗑️ Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update employee dropdown
+        function updateEmployeeDropdown() {
+            const select = document.getElementById('filterEmployee');
+            const currentValue = select.value;
+            const employees = [...new Set(employeeData.map(entry => entry.employeeName))];
+            select.innerHTML = '<option value="">All Employees</option>';
+            employees.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+            select.value = currentValue;
+        }
+
+        // Handle employee filter change
+        function handleEmployeeFilter() {
+            const selectedEmployee = document.getElementById('filterEmployee').value;
+            const salaryCalculator = document.getElementById('salaryCalculator');
+            if (selectedEmployee) {
+                salaryCalculator.style.display = 'block';
+            } else {
+                salaryCalculator.style.display = 'none';
+                document.getElementById('salaryResult').style.display = 'none';
+            }
+        }
+
+        // Calculate salary
+        function calculateSalary() {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
+            const selectedEmployee = document.getElementById('filterEmployee').value;
+            
+            if (!hourlyRate || hourlyRate <= 0) {
+                showStatus('Please enter a valid hourly rate!', true);
+                return;
+            }
+            if (!selectedEmployee) {
+                showStatus('Please select an employee first!', true);
+                return;
+            }
+            
+            filterRecords();
+            let totalHours = 0;
+            let totalDays = 0;
+            let salaryBreakdown = [];
+            
+            filteredData.forEach(entry => {
+                const entryDateTime = new Date(entry.entryTime);
+                const exitDateTime = new Date(entry.exitTime);
+                const diffInMs = exitDateTime - entryDateTime;
+                const hours = diffInMs / (1000 * 60 * 60);
+                const dailySalary = hours * hourlyRate;
+                entry.salary = dailySalary;
+                totalHours += hours;
+                totalDays++;
+                salaryBreakdown.push({
+                    date: formatDate(entry.date),
+                    hours: hours.toFixed(2),
+                    salary: dailySalary.toFixed(2)
+                });
+            });
+            
+            const totalSalary = totalHours * hourlyRate;
+            const resultDiv = document.getElementById('salaryResult');
+            const detailsDiv = document.getElementById('salaryDetails');
+            
+            let breakdownHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <div><strong>Employee:</strong> ${selectedEmployee}</div>
+                    <div><strong>Hourly Rate:</strong> ₹${hourlyRate.toFixed(2)}</div>
+                    <div><strong>Total Hours:</strong> ${totalHours.toFixed(2)} hrs</div>
+                    <div><strong>Total Days:</strong> ${totalDays} days</div>
+                    <div><strong style="color: #28a745; font-size: 1.2em;">Total Salary:</strong> <span style="color: #28a745; font-size: 1.2em;">₹${totalSalary.toFixed(2)}</span></div>
+                </div>
+                <h5>Daily Breakdown:</h5>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <table style="width: 100%; font-size: 12px;">
+                        <thead><tr style="background: #f8f9fa;">
+                            <th style="padding: 5px; border: 1px solid #ddd;">Date</th>
+                            <th style="padding: 5px; border: 1px solid #ddd;">Hours</th>
+                            <th style="padding: 5px; border: 1px solid #ddd;">Daily Salary</th>
+                        </tr></thead><tbody>`;
+            
+            salaryBreakdown.forEach(day => {
+                breakdownHTML += `<tr>
+                    <td style="padding: 5px; border: 1px solid #ddd;">${day.date}</td>
+                    <td style="padding: 5px; border: 1px solid #ddd;">${day.hours} hrs</td>
+                    <td style="padding: 5px; border: 1px solid #ddd;">₹${day.salary}</td>
+                </tr>`;
+            });
+            
+            breakdownHTML += '</tbody></table></div>';
+            detailsDiv.innerHTML = breakdownHTML;
+            resultDiv.style.display = 'block';
+            displayData();
+            showStatus(`Salary calculated! Total: ₹${totalSalary.toFixed(2)} for ${totalHours.toFixed(2)} hours`);
+        }
+
+        // Filter records
+        function filterRecords() {
+            const selectedEmployee = document.getElementById('filterEmployee').value;
+            const selectedGender = document.getElementById('filterGender').value;
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            
+            isFiltered = !!(selectedEmployee || selectedGender || fromDate || toDate);
+            
+            filteredData = employeeData.filter(entry => {
+                let matches = true;
+                if (selectedEmployee && entry.employeeName !== selectedEmployee) matches = false;
+                if (selectedGender && entry.gender !== selectedGender) matches = false;
+                if (fromDate && entry.date < fromDate) matches = false;
+                if (toDate && entry.date > toDate) matches = false;
+                return matches;
+            });
+            
+            displayData();
+            updateStats();
+            updateFilterStatus();
+            handleEmployeeFilter();
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('filterEmployee').value = '';
+            document.getElementById('filterGender').value = '';
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            document.getElementById('hourlyRate').value = '';
+            document.getElementById('salaryCalculator').style.display = 'none';
+            document.getElementById('salaryResult').style.display = 'none';
+            isFiltered = false;
+            loadData();
+            updateStats();
+        }
+
+        // Delete entry
+        function deleteEntry(id) {
+            if (!currentUser) {
+                showStatus('Please login to delete records!', true);
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this entry?')) {
+                employeeData = employeeData.filter(entry => entry.id !== id);
+                
+                updateEmployeeDropdown();
+                filterRecords();
+                updateStats();
+                showStatus('Entry deleted successfully!');
+            }
+        }
+
+        // Edit entry
+        function editEntry(id) {
+            if (!currentUser) {
+                showStatus('Please login to edit records!', true);
+                return;
+            }
+            
+            const entry = employeeData.find(e => e.id === id);
+            if (!entry) return;
+            
+            document.getElementById('employeeName').value = entry.employeeName;
+            document.getElementById('gender').value = entry.gender;
+            document.getElementById('entryTime').value = entry.entryTime;
+            document.getElementById('exitTime').value = entry.exitTime;
+            
+            // Store the ID of the entry being edited
+            document.getElementById('employeeName').dataset.editingId = id;
+            
+            // Change the add button to update button
+            const addButton = document.querySelector('.form-section button[onclick="addEmployee()"]');
+            if (addButton) {
+                addButton.textContent = 'Update Entry';
+                addButton.setAttribute('onclick', 'updateEntry()');
+                addButton.classList.remove('btn');
+                addButton.classList.add('btn-secondary');
+            }
+            
+            showStatus('Edit mode activated. Make changes and click Update.');
+        }
+
+        // Update entry
+        function updateEntry() {
+            if (!currentUser) {
+                showStatus('Please login to update records!', true);
+                return;
+            }
+            
+            const editingId = document.getElementById('employeeName').dataset.editingId;
+            if (!editingId) return;
+            
+            const name = document.getElementById('employeeName').value.trim();
+            const gender = document.getElementById('gender').value;
+            const entryTime = document.getElementById('entryTime').value;
+            const exitTime = document.getElementById('exitTime').value;
+            
+            if (!name || !gender || !entryTime || !exitTime) {
+                showStatus('Please fill all fields!', true);
+                return;
+            }
+            
+            const roundedEntryTime = roundToNearest30Minutes(entryTime);
+            const roundedExitTime = roundToNearest30Minutes(exitTime);
+            
+            if (new Date(roundedExitTime) <= new Date(roundedEntryTime)) {
+                showStatus('Exit time must be after entry time!', true);
+                return;
+            }
+            
+            // Find and update the entry
+            const entryIndex = employeeData.findIndex(e => e.id == editingId);
+            if (entryIndex !== -1) {
+                employeeData[entryIndex] = {
+                    ...employeeData[entryIndex],
+                    employeeName: name,
+                    gender: gender,
+                    entryTime: roundedEntryTime,
+                    exitTime: roundedExitTime,
+                    date: roundedEntryTime.split('T')[0],
+                    updatedBy: currentUser.username,
+                    updatedDate: new Date().toISOString()
+                };
+            }
+            
+            // Reset the form and button
+            clearForm();
+            delete document.getElementById('employeeName').dataset.editingId;
+            
+            const updateButton = document.querySelector('.form-section button[onclick="updateEntry()"]');
+            if (updateButton) {
+                updateButton.textContent = 'Add Employee Entry';
+                updateButton.setAttribute('onclick', 'addEmployee()');
+                updateButton.classList.remove('btn-secondary');
+                updateButton.classList.add('btn');
+            }
+            
+            loadData();
+            updateEmployeeDropdown();
+            updateStats();
+            showStatus('Entry updated successfully!');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalRecords = filteredData.length;
+            const totalEmployees = new Set(filteredData.map(entry => entry.employeeName)).size;
+            const maleCount = filteredData.filter(entry => entry.gender === 'male').length;
+            const femaleCount = filteredData.filter(entry => entry.gender === 'female').length;
+            
+            let totalHours = 0;
+            let totalSalary = 0;
+            
+            filteredData.forEach(entry => {
+                const entryDateTime = new Date(entry.entryTime);
+                const exitDateTime = new Date(entry.exitTime);
+                const diffInMs = exitDateTime - entryDateTime;
+                const hours = diffInMs / (1000 * 60 * 60);
+                totalHours += hours;
+                totalSalary += entry.salary || 0;
+            });
+            
+            document.getElementById('totalRecords').textContent = totalRecords;
+            document.getElementById('totalEmployees').textContent = totalEmployees;
+            document.getElementById('maleCount').textContent = maleCount;
+            document.getElementById('femaleCount').textContent = femaleCount;
+            document.getElementById('totalHours').textContent = totalHours.toFixed(2);
+            document.getElementById('totalSalary').textContent = `₹${totalSalary.toFixed(2)}`;
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            if (!currentUser) {
+                showStatus('Please login to export data!', true);
+                return;
+            }
+            
+            if (filteredData.length === 0) {
+                showStatus('No data to export!', true);
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Employee Name,Gender,Date,Entry Time,Exit Time,Total Hours,Calculated Salary,Added By\n";
+            
+            filteredData.forEach(entry => {
+                const entryDateTime = new Date(entry.entryTime);
+                const exitDateTime = new Date(entry.exitTime);
+                const diffInMs = exitDateTime - entryDateTime;
+                const totalHours = (diffInMs / (1000 * 60 * 60)).toFixed(2);
+                const salary = (entry.salary && entry.salary > 0) ? entry.salary.toFixed(2) : "0";
+                
+                csvContent += `"${entry.employeeName}","${entry.gender}","${formatDate(entry.date)}","${formatTime(entry.entryTime)}","${formatTime(entry.exitTime)}","${totalHours}","₹${salary}","${entry.addedBy}"\n`;
+            });
+            
+            // Create download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `employee_time_records_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showStatus('Data exported successfully!');
+        }
+    </script>
+</body>
+</html>
+```
