@@ -345,7 +345,8 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 400px;
+            width: 600px;
+            max-width: 90%;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
@@ -362,6 +363,56 @@
             color: black;
         }
         
+        .file-upload {
+            border: 2px dashed #d4d4d4;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+        
+        .file-upload p {
+            margin: 10px 0 0 0;
+            color: #666;
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #28a745;
+        }
+        
+        .additional-fields {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -372,6 +423,10 @@
             }
             
             .filter-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
                 grid-template-columns: 1fr;
             }
             
@@ -411,21 +466,68 @@
     <div id="createEmployeeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeCreateEmployeeModal()">&times;</span>
-            <h2 style="margin-bottom: 20px; color: #333;">➕ Create New Employee</h2>
-            <div class="form-group">
-                <label for="newEmployeeName">Employee Name *</label>
-                <input type="text" id="newEmployeeName" required placeholder="Enter full name">
+            <h2 style="margin-bottom: 20px; color: #333;">➕ Add New Employee</h2>
+            
+            <div class="section-title">Employee Information</div>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="newEmployeeName">Employee Name *</label>
+                    <input type="text" id="newEmployeeName" required placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="newEmployeeGender">Gender *</label>
+                    <select id="newEmployeeGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="newEmployeeGender">Gender *</label>
-                <select id="newEmployeeGender" required>
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
+            
+            <div class="additional-fields">
+                <div class="section-title">Contact Information</div>
+                
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="employeeAddress">Address</label>
+                        <textarea id="employeeAddress" rows="3" placeholder="Enter full address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeContact">Contact Number</label>
+                        <input type="tel" id="employeeContact" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeAadhar">Aadhar Number</label>
+                        <input type="text" id="employeeAadhar" placeholder="Enter 12-digit Aadhar number">
+                    </div>
+                </div>
+                
+                <div class="section-title">Document Upload</div>
+                
+                <div class="form-section">
+                    <div class="form-group">
+                        <label>Aadhar Card</label>
+                        <div class="file-upload" onclick="document.getElementById('aadharFile').click()">
+                            <p>📄 Click to upload Aadhar card (PDF/Image)</p>
+                            <input type="file" id="aadharFile" accept=".pdf,image/*" onchange="handleFileSelect(this, 'aadharInfo')">
+                            <div id="aadharInfo" class="file-info"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Documents</label>
+                        <div class="file-upload" onclick="document.getElementById('additionalFiles').click()">
+                            <p>📎 Click to upload additional documents</p>
+                            <input type="file" id="additionalFiles" multiple accept=".pdf,.doc,.docx,image/*" onchange="handleFileSelect(this, 'additionalInfo')">
+                            <div id="additionalInfo" class="file-info"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
             <div style="margin-top: 20px; text-align: center;">
-                <button type="button" class="btn" onclick="saveNewEmployee()">Create Employee</button>
+                <button type="button" class="btn" onclick="saveNewEmployee()">Add Employee</button>
                 <button type="button" class="btn btn-danger" onclick="closeCreateEmployeeModal()" style="margin-left: 10px;">Cancel</button>
             </div>
         </div>
@@ -461,6 +563,7 @@
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -523,6 +626,7 @@
                         <option value="">All Genders</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -791,6 +895,11 @@
             document.getElementById('createEmployeeModal').style.display = 'block';
             document.getElementById('newEmployeeName').value = '';
             document.getElementById('newEmployeeGender').value = '';
+            document.getElementById('employeeAddress').value = '';
+            document.getElementById('employeeContact').value = '';
+            document.getElementById('employeeAadhar').value = '';
+            document.getElementById('aadharInfo').innerHTML = '';
+            document.getElementById('additionalInfo').innerHTML = '';
         }
 
         // Close create employee modal
@@ -798,10 +907,42 @@
             document.getElementById('createEmployeeModal').style.display = 'none';
         }
 
+        // Handle file selection
+        function handleFileSelect(input, infoId) {
+            const files = input.files;
+            const infoDiv = document.getElementById(infoId);
+            
+            if (files.length === 0) {
+                infoDiv.innerHTML = '';
+                return;
+            }
+            
+            let fileInfo = '';
+            if (files.length === 1) {
+                fileInfo = `📎 ${files[0].name} (${formatFileSize(files[0].size)})`;
+            } else {
+                fileInfo = `📎 ${files.length} files selected`;
+            }
+            
+            infoDiv.innerHTML = fileInfo;
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
         // Save new employee
         function saveNewEmployee() {
             const name = document.getElementById('newEmployeeName').value.trim();
             const gender = document.getElementById('newEmployeeGender').value;
+            const address = document.getElementById('employeeAddress').value.trim();
+            const contact = document.getElementById('employeeContact').value.trim();
+            const aadhar = document.getElementById('employeeAadhar').value.trim();
             
             if (!name) {
                 showStatus('Please enter employee name!', true);
@@ -812,6 +953,12 @@
                 return;
             }
             
+            // Validate Aadhar number if provided
+            if (aadhar && !/^\d{12}$/.test(aadhar.replace(/\s+/g, ''))) {
+                showStatus('Aadhar number must be 12 digits!', true);
+                return;
+            }
+            
             // Check if employee already exists
             const existing = allEmployees.find(emp => emp.name.toLowerCase() === name.toLowerCase());
             if (existing) {
@@ -819,14 +966,43 @@
                 return;
             }
             
+            // Get file information
+            const aadharFile = document.getElementById('aadharFile').files[0];
+            const additionalFiles = document.getElementById('additionalFiles').files;
+            
+            const aadharFileInfo = aadharFile ? {
+                name: aadharFile.name,
+                size: aadharFile.size,
+                type: aadharFile.type
+            } : null;
+            
+            const additionalFilesInfo = [];
+            for (let i = 0; i < additionalFiles.length; i++) {
+                additionalFilesInfo.push({
+                    name: additionalFiles[i].name,
+                    size: additionalFiles[i].size,
+                    type: additionalFiles[i].type
+                });
+            }
+            
             // Add new employee
-            allEmployees.push({ name, gender });
+            allEmployees.push({ 
+                name, 
+                gender, 
+                address,
+                contact,
+                aadhar,
+                aadharFile: aadharFileInfo,
+                additionalFiles: additionalFilesInfo,
+                createdAt: new Date().toISOString()
+            });
+            
             localStorage.setItem('ettr_employees', JSON.stringify(allEmployees));
             
             closeCreateEmployeeModal();
-            showStatus(`Employee "${name}" created successfully!`);
+            showStatus(`Employee "${name}" added successfully!`);
             
-            // Update the autocomplete and gender field
+            // Update the autocomplete
             initializeEmployeeAutocomplete();
             document.getElementById('employeeName').value = name;
             document.getElementById('gender').value = gender;
@@ -975,8 +1151,8 @@
                 const diffInMs = exitDateTime - entryDateTime;
                 const totalHours = (diffInMs / (1000 * 60 * 60)).toFixed(2);
                 
-                const genderClass = entry.gender === 'male' ? 'gender-male' : 'gender-female';
-                const genderIcon = entry.gender === 'male' ? '👨' : '👩';
+                const genderClass = entry.gender === 'male' ? 'gender-male' : entry.gender === 'female' ? 'gender-female' : '';
+                const genderIcon = entry.gender === 'male' ? '👨' : entry.gender === 'female' ? '👩' : '👤';
                 
                 const salaryDisplay = (entry.salary && entry.salary > 0) ? 
                     `<span class="salary-amount">₹${entry.salary.toFixed(2)}</span>` : 
@@ -1249,6 +1425,7 @@
             const totalEmployees = new Set(filteredData.map(entry => entry.employeeName)).size;
             const maleCount = filteredData.filter(entry => entry.gender === 'male').length;
             const femaleCount = filteredData.filter(entry => entry.gender === 'female').length;
+            const otherCount = filteredData.filter(entry => entry.gender === 'other').length;
             
             let totalHours = 0;
             let totalSalary = 0;
@@ -1283,7 +1460,7 @@
             }
             
             // Create CSV content
-            let csvContent = "text/csv;charset=utf-8,";
+            let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Employee Name,Gender,Date,Entry Time,Exit Time,Total Hours,Calculated Salary,Added By\n";
             
             filteredData.forEach(entry => {
